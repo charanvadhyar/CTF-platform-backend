@@ -38,4 +38,20 @@ async def init_database():
         sys.exit(1)
 
 if __name__ == "__main__":
+    # Initialize the database
     asyncio.run(init_database())
+    
+    # Start the FastAPI app with uvicorn
+    import os
+    import uvicorn
+    
+    # Get port from environment variable or use default
+    port = int(os.environ.get("PORT", 8000))
+    
+    # Start the server
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=port,
+        log_level="info"
+    )
