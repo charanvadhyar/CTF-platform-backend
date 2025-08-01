@@ -7,6 +7,19 @@ Handles database initialization and application startup
 import asyncio
 import logging
 import sys
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file (if available)
+load_dotenv()
+
+# Print important environment variables for debugging
+mongodb_url = os.environ.get("MONGODB_URL", "mongodb://localhost:27017")
+logging.info(f"Using MongoDB URL: {mongodb_url.replace('://','://**:**@').split('@')[1] if '@' in mongodb_url else 'localhost:27017'}")
+
+# Set any missing environment variables from Railway
+os.environ["MONGODB_URL"] = mongodb_url
+
 from app.database import connect_to_mongo, get_database
 from app.auth import create_admin_user_data
 from app.config import settings
