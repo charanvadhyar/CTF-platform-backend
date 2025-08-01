@@ -15,6 +15,16 @@ load_dotenv()
 
 # Print important environment variables for debugging
 mongodb_url = os.environ.get("MONGODB_URL", "mongodb://localhost:27017")
+
+# Add connection timeout and retry options to MongoDB URL
+if "mongodb+srv" in mongodb_url and "?" in mongodb_url:
+    # URL already has query parameters
+    if "retryWrites=true" in mongodb_url and "connectTimeoutMS" not in mongodb_url:
+        mongodb_url = mongodb_url.replace("retryWrites=true", "retryWrites=true&connectTimeoutMS=30000&socketTimeoutMS=30000&serverSelectionTimeoutMS=30000")
+elif "mongodb+srv" in mongodb_url:
+    # Add query parameters
+    mongodb_url = f"{mongodb_url}?connectTimeoutMS=30000&socketTimeoutMS=30000&serverSelectionTimeoutMS=30000"
+
 logging.info(f"Using MongoDB URL: {mongodb_url.replace('://','://**:**@').split('@')[1] if '@' in mongodb_url else 'localhost:27017'}")
 
 # Set any missing environment variables from Railway
